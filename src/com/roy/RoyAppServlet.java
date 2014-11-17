@@ -19,12 +19,6 @@ public class RoyAppServlet extends HttpServlet {
 		
 		String result1 = "<h1>Area of circle with redius "+radius+" is "+res1+" square cm.  ";
 		
-		/* double deg=30.0;
-		double radian= Math.toRadians(deg);
-		double res2= ; 
-		String result2 = "<h1>Length of opposite where angle B is 30 degrees and Hypotenuse length is 50 cm is  cm.  ";
-		
-	*/
 		double opposite;
 		int hypotenuse=50;
 		int angleDeg=30;
