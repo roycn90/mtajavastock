@@ -8,10 +8,24 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>RoyApp</servlet-name>
 		<servlet-class>com.roy.RoyAppServlet</servlet-class>
 	</servlet>
+	
+	
 	<servlet-mapping>
 		<servlet-name>RoyApp</servlet-name>
-		<url-pattern>/royapp</url-pattern>
+		<url-pattern>/RoyAppServlet</url-pattern>
 	</servlet-mapping>
+	
+	
+	<servlet>
+	   <servlet-name>StockDetailsServlet</servlet-name> 
+	<servlet-class>com.roy.StockDetailsServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>StockDetailsServlet</servlet-name>
+		<url-pattern>/StockDetailsServlet</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
