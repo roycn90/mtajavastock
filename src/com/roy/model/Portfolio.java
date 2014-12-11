@@ -2,8 +2,6 @@ package com.roy.model;
 
 import java.util.Date;
 
-import com.roy.Stock;
-
 public class Portfolio {
 	
 	public String title=new String();
@@ -11,20 +9,39 @@ public class Portfolio {
 	
 	public Stock[] stocks;
 	public StockStatus[] stocksStatus; //inner class below
-	public int portfolioSize=0;
+	private int portfolioSize=0;
 	
-	//Contractor
+	//C'tor
 	public Portfolio () { 
 	 stocks = new Stock[MAX_PORTFOLIO_SIZE];
 	 stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
 	}
 	
+	public Portfolio (String title,Stock[] stocks,StockStatus[] stocksStatus) {
+		setTitle(title); setStocks(stocks); setStocksStatus(stocksStatus);
+		
+	}
+	
+	//copy c'tor
+	public Portfolio (Portfolio portfolio){
+		this(portfolio.getTitle(), portfolio.getStocks(), portfolio.getStocksStatus() );
+		
+	}
+	
+	public StockStatus[] getStocksStatus() {
+		return stocksStatus;
+	}
+
+	public void setStocksStatus(StockStatus[] stocksStatus) {
+		this.stocksStatus = stocksStatus;
+	}
+
 	public String getTitle() {
 		return title;
 	}
 	
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = new String (title);
 	}
 	
 	public static int getMaxPortfolioSize() {
@@ -58,6 +75,16 @@ public class Portfolio {
 		return title;
 	}
 	
+	public Stock[] getStocks() {
+		return stocks;
+	}
+	public void setStocks(Stock[] stocks) {
+		for(int i=0; i<stocks.length;  i++)
+		{
+			this.stocks[portfolioSize++]=new Stock(stocks[i]);
+		}
+		
+	}
 	public class StockStatus{
 		static final int DO_NOTHING=0;
 		final int BUY = 1;
@@ -69,14 +96,105 @@ public class Portfolio {
 		 Date date;
 		 int recommendation;
 		 int stockQuantity;
-	}
+		 
+		 
+		 
+		 //c'tor
+		 
+		 public StockStatus(String symbol, float currentBid, float currentAsk, Date date, int recommendation, int stockQuantity)
+		 {
+			 
+				setSymbol(symbol);
+				setCurrentBid(currentBid);
+				setCurrentAsk(currentAsk);
+				setDate(date);
+				setRecommendation(recommendation);
+				setStockQuantity(stockQuantity);
+				
+			}
+		 
+		 //copy c'tor
+		 public StockStatus (StockStatus stockStatus){
+			 this(
+			 stockStatus.getSymbol(),
+			 stockStatus.getCurrentBid(),
+			 stockStatus.getCurrentAsk(),
+			 stockStatus.getDate(),
+			 stockStatus.getRecommendation(),
+			 stockStatus.getStockQuantity()
+				);
+		 }
+		 
+		 
+		 public String getSymbol() {
+			return symbol;
+		}
 
-	public Stock[] getStocks() {
-		return stocks;
+
+		public void setSymbol(String symbol) {
+			this.symbol = symbol;
+		}
+
+
+		public float getCurrentBid() {
+			return currentBid;
+		}
+
+
+		public void setCurrentBid(float currentBid) {
+			this.currentBid = currentBid;
+		}
+
+
+		public float getCurrentAsk() {
+			return currentAsk;
+		}
+
+
+		public void setCurrentAsk(float currentAsk) {
+			this.currentAsk = currentAsk;
+		}
+
+
+		public Date getDate() {
+			return date;
+		}
+
+
+		public void setDate(Date date) {
+			this.date = date;
+		}
+
+
+		public int getRecommendation() {
+			return recommendation;
+		}
+
+
+		public void setRecommendation(int recommendation) {
+			this.recommendation = recommendation;
+		}
+
+
+		public int getStockQuantity() {
+			return stockQuantity;
+		}
+
+
+		public void setStockQuantity(int stockQuantity) {
+			this.stockQuantity = stockQuantity;
+		}
+
+
+		
 	}
-	public void setStocks(Stock[] stocks) {
-		this.stocks = stocks;
-	}
+	
+
+	
+	
+	
+
+
 
 
 

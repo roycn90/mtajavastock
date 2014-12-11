@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.*;
 
-import com.roy.Stock;
 import com.roy.model.Portfolio;
+import com.roy.model.Stock;
 import com.roy.service.PortfolioService;
 
 

@@ -1,4 +1,4 @@
-package com.roy;
+package com.roy.model;
 
 import java.util.Date;
 import java.util.Calendar;
@@ -20,8 +20,17 @@ public class Stock {
 		float ask=0;
 		float bid=0;
 		date=new Date ();
-		
-		
+	}
+	
+	//c'tor
+public Stock (String symbol, float ask, float bid, Date date)
+{
+	setSymbol(symbol); setAsk(ask); setBid(bid); setDate(date);
+}
+		//copy c'tor
+	public Stock (Stock stock)
+	{
+		this(stock.getSymbol(), stock.getAsk(), stock.getBid(), stock.getDate());
 	}
 
 	public String getSymbol() {
@@ -59,7 +68,7 @@ public class Stock {
 	public String getHtmlDescription(){
 		
 		String stockHtmlDetailsString;
-		stockHtmlDetailsString = "<b>Stock symbol</b>: "+getSymbol()+" <b>Bid</b>: "+getBid() +"<b> Ask</b>:" +getAsk()+ "<b> Date</b>:"+getDate() +"" ;
+		stockHtmlDetailsString = "<b>Stock symbol</b>: "+getSymbol()+" <b>Bid</b>: "+getBid() +"<b> Ask</b>:" +getAsk()+ "<b> Date</b>:"+getDate() +"<br>" ;
 		
 		return stockHtmlDetailsString;
 				

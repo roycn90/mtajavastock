@@ -3,8 +3,8 @@ package com.roy.service;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.roy.Stock;
 import com.roy.model.Portfolio;
+import com.roy.model.Stock;
 
 public class PortfolioService {
 	
@@ -21,7 +21,7 @@ public class PortfolioService {
 		Stock stock1=new Stock();
 		Stock stock2=new Stock();
 		Stock stock3=new Stock();
-		
+	
 		stock1.setSymbol("PIH");
 		stock1.setAsk((float)12.4);
 		stock1.setBid((float)13.1);

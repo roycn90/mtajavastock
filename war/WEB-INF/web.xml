@@ -4,27 +4,8 @@ xmlns="http://java.sun.com/xml/ns/javaee"
 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<servlet>
-		<servlet-name>RoyApp</servlet-name>
-		<servlet-class>com.roy.RoyAppServlet</servlet-class>
-	</servlet>
+
 	
-	
-	<servlet-mapping>
-		<servlet-name>RoyApp</servlet-name>
-		<url-pattern>/RoyAppServlet</url-pattern>
-	</servlet-mapping>
-	
-	
-	<servlet>
-	   <servlet-name>StockDetailsServlet</servlet-name> 
-	<servlet-class>com.roy.StockDetailsServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>StockDetailsServlet</servlet-name>
-		<url-pattern>/StockDetailsServlet</url-pattern>
-	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>PortfolioServlet</servlet-name>
