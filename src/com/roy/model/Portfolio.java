@@ -179,15 +179,20 @@ public void updateBalance(float amount){
 		return false;
 	}
 	
+
+	
 	public boolean sellStock(String symbol, int sellQuant){
+		
 		for(int i=0 ; i<portfolioSize ; i++){
+			
 			if((this.stocksStatus[i].symbol).equals(symbol)){
+				
 				if(sellQuant==-1){
 					this.updateBalance((this.stocksStatus[i].getStockQuantity())*(this.stocksStatus[i].getCurrentBid()));
 					stocksStatus[i].setStockQuantity(0);
 					return true;
 				}
-				else if (sellQuant>0 && sellQuant<=this.stocksStatus[i].getStockQuantity()){
+				 if (sellQuant>0 && sellQuant<=this.stocksStatus[i].getStockQuantity()){
 					this.updateBalance(sellQuant*(this.stocksStatus[i].getCurrentBid()));
 					stocksStatus[i].setStockQuantity(this.stocksStatus[i].getStockQuantity()-sellQuant);
 					return true;
@@ -195,19 +200,29 @@ public void updateBalance(float amount){
 				
 												
 			}
-		}
+		
 		System.out.println("error! not valid");
 					return false;
+		}
+		return false;
 	}
 		
 		
 	
 	
-	public boolean buyStock (String symbol, int buyQuant){
 		
-		if(buyQuant>0){
+		
+		 public boolean buyStock (String symbol, int buyQuant){
+			 
+			 if(buyQuant==0 || buyQuant<-1){
+				 System.out.println("error, invalid quantity");
+				 return false;
+			 }
+			 
+			 if(buyQuant>0){
+		 
 		for(int i=0 ; i<portfolioSize ; i++){
-			if ((this.stocks[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=this.getBalance()){
+		 if ((this.stocks[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=this.getBalance()){
 				
 				this.updateBalance(-(this.stocksStatus[i].getCurrentAsk()*buyQuant));
 				stocksStatus[i].setStockQuantity(buyQuant+this.stocksStatus[i].getStockQuantity());
@@ -217,7 +232,7 @@ public void updateBalance(float amount){
 		}
 				
 		}
-		else if (buyQuant==-1){
+		 if (buyQuant==-1){
 			
 			for(int i=0 ; i<portfolioSize ; i++){
 				if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=this.getBalance()){
@@ -235,10 +250,13 @@ public void updateBalance(float amount){
 		}
 		
 		
-		System.out.println("error! cant conduct this transaction!");
-		return false;
+			System.out.println("throwed");
+			return false;
 		
-	}
+		
+	
+		 }
+	
 	
 	public float getStocksValue(){
 		int i=0;

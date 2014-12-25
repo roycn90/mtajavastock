@@ -17,12 +17,13 @@ public class PortfolioService {
 		date = c.getTime();
 		
 		 Portfolio myPortfolio =new Portfolio();
+		
 /*
 		Stock stock1=new Stock("PIH",(float)10.0,(float)8.5,date);
 		Stock stock2=new Stock("AAL",(float)30.0,(float)25.5,date);
 		Stock stock3=new Stock("CAAS",(float)20,(float)15.5,date);
 	*/
-		 
+		
 		Stock stock1 = new Stock();
 		stock1.setSymbol("PIH");
 		stock1.setAsk((float)10.0);

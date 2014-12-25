@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 
 /**
- * @author Roi
+ * @author Roy
  *
  */
 public class Stock {
