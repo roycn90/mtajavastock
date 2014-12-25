@@ -36,7 +36,9 @@ public class Portfolio {
 	}
 	
 	public Portfolio (String title,Stock[] stocks,StockStatus[] stocksStatus, float balance) {
-		setTitle(title); setStocks(stocks); setStocksStatus(stocksStatus); setBalance(balance);
+		setTitle(title); 
+		setStocks(stocks,getLogicalSizeStocks(stocks)); 
+		setBalance(balance);
 		
 	}
 	
@@ -64,13 +66,7 @@ public class Portfolio {
 		}
 		return i;//-1;//else i would be returning the spot AFTER last item position(on array)
 	}
-	private int getLogicalSizeStatus(StockStatus[] OtherstockStatus){//add description later
-		int i =0 ;
-		while(OtherstockStatus[i]!=null && i<MAX_PORTFOLIO_SIZE){
-			i++;
-		}
-		return i;//-1;
-	}
+
 	private void copyStocksArray(Stock[] stocks, int size){// combine two next func to one in the copy c'tor
 		
 		if(size > 0 && size<= MAX_PORTFOLIO_SIZE-1)//array is not full
@@ -115,9 +111,6 @@ public void updateBalance(float amount){
 		return this.stocksStatus;
 	}
 
-	public void setStocksStatus(StockStatus[] stocksStatus) {
-		this.stocksStatus = stocksStatus;//
-	}
 
 	public String getTitle() {
 		return title;
@@ -132,13 +125,11 @@ public void updateBalance(float amount){
 		return portfolioSize;
 	}
 	
-	public void setPortfolioSize(int portfolioSize) {
-		this.portfolioSize = portfolioSize;
-	}
+
 	
 
 	public void addStock(Stock stock){
-		for (int i=0; i<getPortfolioSize(); i++)
+		for (int i=0; i<getPortfolioSize();i++)
 		{
 		if((this.stocks[i].getSymbol()).equals(stock.getSymbol()))// checking if theres same stock in the portfolio
 		{
@@ -146,7 +137,7 @@ public void updateBalance(float amount){
 			return;
 		
 		}
-		else if (getPortfolioSize()<portfolioSize)//array is full
+		else if (portfolioSize==MAX_PORTFOLIO_SIZE)//array is full
 		{
 			System.out.println("Can’t add new stock, portfolio can have only " +MAX_PORTFOLIO_SIZE+ " stocks");
 			return ;
@@ -154,19 +145,14 @@ public void updateBalance(float amount){
 		
 		else{
 			stocks[portfolioSize] = new Stock(stock) ;
-			addStockStatus();
-			portfolioSize++ ;
-			this.setStocksStatus(stocksStatus);
-			
+			stocksStatus[portfolioSize]=new StockStatus (stock);
+			portfolioSize++ ;		
 			return ;
 		}
 		}
 	}
 
-	private void addStockStatus(){
-		
-			this.stocksStatus[getLogicalSizeStocks(this.stocks)] = new StockStatus() ;
-		}
+
 	
 
 	
@@ -221,7 +207,7 @@ public void updateBalance(float amount){
 		
 		if(buyQuant>0){
 		for(int i=0 ; i<portfolioSize ; i++){
-			if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=balance){
+			if ((this.stocks[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=this.getBalance()){
 				
 				this.updateBalance(-(this.stocksStatus[i].getCurrentAsk()*buyQuant));
 				stocksStatus[i].setStockQuantity(buyQuant+this.stocksStatus[i].getStockQuantity());
@@ -231,24 +217,27 @@ public void updateBalance(float amount){
 		}
 				
 		}
-		if (buyQuant==-1){
+		else if (buyQuant==-1){
 			
 			for(int i=0 ; i<portfolioSize ; i++){
-				if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=balance){
+				if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=this.getBalance()){
 					
 				int tempQuant=(int)(balance/this.stocksStatus[i].getCurrentAsk());
 				float left = balance%this.stocksStatus[i].getCurrentAsk();
 				this.setBalance(left);
 				this.stocksStatus[i].setStockQuantity(this.stocksStatus[i].getStockQuantity()+tempQuant);	
 				return true;
+				
 					
 				}
 			}
 			
 		}
 		
+		
 		System.out.println("error! cant conduct this transaction!");
 		return false;
+		
 	}
 	
 	public float getStocksValue(){
@@ -291,11 +280,11 @@ public void updateBalance(float amount){
 		return stocks;
 	}
 	
-	public void setStocks(Stock[] stocks) {
-		for(int i=0; i<stocks.length;  i++)
+	public void setStocks(Stock[] stocks,int size) {
+		for(int i=0; i<size;  i++)
 		{
-			this.stocks[portfolioSize++]=new Stock(stocks[i]);
-			i++;
+			this.addStock(stocks[i]);
+			//need to solve Stockstatus
 		}
 				
 	}
