@@ -21,7 +21,7 @@ public class PortfolioServlet extends HttpServlet {
 		Stock[] stocks = portfolio.getStocks();
 
 		resp.setContentType("text/html");
-		resp.getWriter().println(portfolio.getHtmlDescription());
+		resp.getWriter().println(portfolio.getHtmlString());
 	}
 	
 

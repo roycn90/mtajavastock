@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Portfolio {
 	
-	public String title=new String();
+	public String title;
 	public final static int MAX_PORTFOLIO_SIZE=5;
 	public static enum ALGO_RECOMMENDATION
 	{DO_NOTHING, BUY, SELL};
@@ -18,7 +18,8 @@ public class Portfolio {
 
 	//C'tor
 	public Portfolio () { 
-		
+		this.setTitle("");
+		this.setBalance(0);
 	 stocks = new Stock[MAX_PORTFOLIO_SIZE];
 	 stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
 	  if(getLogicalSizeStocks(stocks) > 0 && getLogicalSizeStocks(stocks)<= MAX_PORTFOLIO_SIZE-1)//array is not full	
@@ -115,7 +116,7 @@ public void updateBalance(float amount){
 	}
 
 	public void setStocksStatus(StockStatus[] stocksStatus) {
-		this.stocksStatus = stocksStatus;
+		this.stocksStatus = stocksStatus;//
 	}
 
 	public String getTitle() {
@@ -125,10 +126,7 @@ public void updateBalance(float amount){
 	public void setTitle(String title) {
 		this.title = new String (title);
 	}
-	
-	public static int getMaxPortfolioSize() {
-		return MAX_PORTFOLIO_SIZE;
-	}
+
 	
 	public int getPortfolioSize() {
 		return portfolioSize;
@@ -173,7 +171,7 @@ public void updateBalance(float amount){
 
 	
 	
-	public Boolean removeStock(Stock symbol){
+	public Boolean removeStock(String symbol){
 		
 		
 		for (int i=0; i < portfolioSize ; i++){
@@ -184,6 +182,8 @@ public void updateBalance(float amount){
 				//
 				this.stocks[i]=this.stocks[portfolioSize-1];
 				this.stocksStatus[i]=this.stocksStatus[portfolioSize-1];
+				this.stocks[i]=null;
+				this.stocksStatus[i]=null;
 				this.portfolioSize--;
 							
 				return true;
@@ -194,48 +194,37 @@ public void updateBalance(float amount){
 	}
 	
 	public boolean sellStock(String symbol, int sellQuant){
-		if (sellQuant==-1){
-			for (int i=0; i < portfolioSize ; i++){
-				
-				if ((this.stocksStatus[i].symbol).equals(symbol)){
-					//add the money earned from selling in this transaction
-					
-					this.updateBalance((this.stocksStatus[i].getCurrentBid())*(this.stocksStatus[i].getStockQuantity()));
+		for(int i=0 ; i<portfolioSize ; i++){
+			if((this.stocksStatus[i].symbol).equals(symbol)){
+				if(sellQuant==-1){
+					this.updateBalance((this.stocksStatus[i].getStockQuantity())*(this.stocksStatus[i].getCurrentBid()));
+					stocksStatus[i].setStockQuantity(0);
 					return true;
 				}
-				else{
-					System.out.println("there is no such stock");
+				else if (sellQuant>0 && sellQuant<=this.stocksStatus[i].getStockQuantity()){
+					this.updateBalance(sellQuant*(this.stocksStatus[i].getCurrentBid()));
+					stocksStatus[i].setStockQuantity(this.stocksStatus[i].getStockQuantity()-sellQuant);
+					return true;
+				}
+				
+												
+			}
+		}
+		System.out.println("error! not valid");
 					return false;
-			}
-		}
-		}
-			
-			if (sellQuant>0 && sellQuant<this.stocksStatus[i].getStockQuantity()){
-				for (int i=0; i < portfolioSize ; i++){
-					
-					if ((this.stocksStatus[i].symbol).equals(symbol))
-					{	
-						this.updateBalance((this.stocksStatus[i].getCurrentBid())*sellQuant);//add the money earned from selling in this transaction
-						return true;
-					}
-					else
-						System.out.println("there is no such stock");
-						return false;				
-			}
-			}
-			
-			System.out.println("error! invalid value");
-			return false;
-		
 	}
+		
+		
+	
 	
 	public boolean buyStock (String symbol, int buyQuant){
 		
 		if(buyQuant>0){
 		for(int i=0 ; i<portfolioSize ; i++){
-			if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<balance){
+			if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=balance){
 				
 				this.updateBalance(-(this.stocksStatus[i].getCurrentAsk()*buyQuant));
+				stocksStatus[i].setStockQuantity(buyQuant+this.stocksStatus[i].getStockQuantity());
 				return true;
 				
 			}
@@ -244,14 +233,40 @@ public void updateBalance(float amount){
 		}
 		if (buyQuant==-1){
 			
-		//איך לחשב האם אפשר לקנות ללא שארית וגם עד הבאלאנס?
+			for(int i=0 ; i<portfolioSize ; i++){
+				if ((this.stocksStatus[i].getSymbol()).equals(symbol) && ((this.stocksStatus[i].getCurrentAsk())*buyQuant)<=balance){
+					
+				int tempQuant=(int)(balance/this.stocksStatus[i].getCurrentAsk());
+				float left = balance%this.stocksStatus[i].getCurrentAsk();
+				this.setBalance(left);
+				this.stocksStatus[i].setStockQuantity(this.stocksStatus[i].getStockQuantity()+tempQuant);	
+				return true;
+					
+				}
+			}
 			
 		}
 		
+		System.out.println("error! cant conduct this transaction!");
 		return false;
 	}
 	
+	public float getStocksValue(){
+		int i=0;
+		float sum=0;
+		while(i<this.portfolioSize){
+			sum+=this.stocksStatus[i].getCurrentBid()*this.stocksStatus[i].getStockQuantity();
+			i++;
+		}
+		return sum;
+	}
 	
+	
+	public float getTotalValue(){
+
+		return (getStocksValue()+this.getBalance());
+		
+	}
 	
 	
 	public Stock[] getStocks(Portfolio portfolio){
@@ -261,14 +276,14 @@ public void updateBalance(float amount){
 	
 	public String getHtmlString(){
 	
-		title=	"<h1>The portfolio</h1>";
-		String output= new String();
+		
 		int i=0;
-		//title=title+stocks[0].getHtmlDescription()+stocks[1].getHtmlDescription()+stocks[2].getHtmlDescription();
-		while (stocks[i] !=null && i<portfolioSize)
+		String output= title;
+		while (i<portfolioSize)
 		{
-			output=title+"<br>"+stocks[i].getHtmlDescription();
+			output+="<br>"+stocks[i].getHtmlDescription()+" quantity : "+ this.stocksStatus[i].getStockQuantity();
 		}
+		output+=" <br> Balance: "+ this.getBalance()+ " Stocks value: "+this.getStocksValue()+" Total value: "+this.getTotalValue();
 		return output;
 	}
 	
