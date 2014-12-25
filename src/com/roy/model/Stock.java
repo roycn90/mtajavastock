@@ -68,7 +68,7 @@ public Stock (String symbol, float ask, float bid, Date date)
 	public String getHtmlDescription(){
 		
 		String stockHtmlDetailsString;
-		stockHtmlDetailsString = "<b>Stock symbol</b>: "+getSymbol()+" <b>Bid</b>: "+getBid() +"<b> Ask</b>:" +getAsk()+ "<b> Date</b>:"+getDate() +"<br>" ;
+		stockHtmlDetailsString =new String ( "<b>Stock symbol</b>: "+getSymbol()+" <b>Bid</b>: "+getBid() +"<b> Ask</b>:" +getAsk()+ "<b> Date</b>:"+getDate() +"<br>");
 		
 		return stockHtmlDetailsString;
 				
