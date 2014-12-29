@@ -281,7 +281,7 @@ public void updateBalance(float amount){
 	
 	public String getHtmlString(){
 	
-		
+		/*
 		int i=0;
 		String output= title;
 		while (i<portfolioSize)
@@ -289,8 +289,24 @@ public void updateBalance(float amount){
 			output+="<br>"+stocks[i].getHtmlDescription()+" quantity : "+ this.stocksStatus[i].getStockQuantity();
 		}
 		output+=" <br> Balance: "+ this.getBalance()+ " Stocks value: "+this.getStocksValue()+" Total value: "+this.getTotalValue();
-		return output;
-	}
+		return output;*/
+		
+		String output =new String();
+		
+		output += "<h1>"+this.title +"</h1>"+"<br>";
+		
+		for(int i=0 ; i<portfolioSize ; i++){
+			output += "<br>"+stocks[i].getHtmlDescription()+" quantity : "+ this.stocksStatus[i].getStockQuantity()+"<br>"+"<br>";
+			
+		}
+		
+		
+			output += " Total Portfolio Value: "+ this.getTotalValue()+"$"+", Total Stocks value: "+this.getStocksValue()+"$ , Balance: "+this.getBalance()+"$";
+			
+			return output;
+
+		}
+	
 	
 	public Stock[] getStocks() {
 		return stocks;

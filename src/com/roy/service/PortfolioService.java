@@ -48,7 +48,7 @@ public class PortfolioService {
 		myPortfolio.addStock(stock3);
 		
 		myPortfolio.setTitle("Exercise 7 portfolio");
-		myPortfolio.setBalance(10000);
+		myPortfolio.updateBalance(10000);
 		myPortfolio.buyStock("PIH",20);
 		myPortfolio.buyStock("AAL",30);
 		myPortfolio.buyStock("CAAS",40);
