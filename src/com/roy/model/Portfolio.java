@@ -129,27 +129,24 @@ public void updateBalance(float amount){
 	
 
 	public void addStock(Stock stock){
-		for (int i=0; i<getPortfolioSize();i++)
-		{
-		if((this.stocks[i].getSymbol()).equals(stock.getSymbol()))// checking if theres same stock in the portfolio
-		{
-			System.out.println("you already have such stock! cant add new one ");
+		if(portfolioSize >= MAX_PORTFOLIO_SIZE) {
+			System.out.println("stock array is full!");
 			return;
-		
-		}
-		else if (portfolioSize==MAX_PORTFOLIO_SIZE)//array is full
-		{
-			System.out.println("Can’t add new stock, portfolio can have only " +MAX_PORTFOLIO_SIZE+ " stocks");
-			return ;
 		}
 		
-		else{
-			stocks[portfolioSize] = new Stock(stock) ;
-			stocksStatus[portfolioSize]=new StockStatus (stock);
-			portfolioSize++ ;		
-			return ;
+		for (int i=0; i<getPortfolioSize();i++) {
+			if(stock.getSymbol().equals(stocks[i].getSymbol())) {
+				System.out.println("you already have such stock! cant add new one ");
+				return;
+			}
 		}
-		}
+		
+		stocks[portfolioSize] = stock;
+		stocksStatus[portfolioSize]=new StockStatus (stock);
+		portfolioSize++;
+		
+		
+		
 	}
 
 
@@ -183,6 +180,8 @@ public void updateBalance(float amount){
 	
 	public boolean sellStock(String symbol, int sellQuant){
 		
+		boolean ret = false;
+		
 		for(int i=0 ; i<portfolioSize ; i++){
 			
 			if((this.stocksStatus[i].symbol).equals(symbol)){
@@ -190,21 +189,20 @@ public void updateBalance(float amount){
 				if(sellQuant==-1){
 					this.updateBalance((this.stocksStatus[i].getStockQuantity())*(this.stocksStatus[i].getCurrentBid()));
 					stocksStatus[i].setStockQuantity(0);
-					return true;
+					ret = true;
 				}
 				 if (sellQuant>0 && sellQuant<=this.stocksStatus[i].getStockQuantity()){
 					this.updateBalance(sellQuant*(this.stocksStatus[i].getCurrentBid()));
 					stocksStatus[i].setStockQuantity(this.stocksStatus[i].getStockQuantity()-sellQuant);
-					return true;
+					ret = true;
 				}
-				
-												
 			}
-		
-		System.out.println("error! not valid");
-					return false;
 		}
-		return false;
+		
+		if(!ret)
+			System.out.println("error! not valid");
+		
+		return ret;
 	}
 		
 		
