@@ -18,11 +18,7 @@ public class PortfolioService {
 		
 		 Portfolio myPortfolio =new Portfolio();
 		
-/*
-		Stock stock1=new Stock("PIH",(float)10.0,(float)8.5,date);
-		Stock stock2=new Stock("AAL",(float)30.0,(float)25.5,date);
-		Stock stock3=new Stock("CAAS",(float)20,(float)15.5,date);
-	*/
+
 		
 		Stock stock1 = new Stock();
 		stock1.setSymbol("PIH");
@@ -47,7 +43,7 @@ public class PortfolioService {
 		myPortfolio.addStock(stock2);
 		myPortfolio.addStock(stock3);
 		
-		myPortfolio.setTitle("Exercise 7 portfolio");
+		myPortfolio.setTitle("Exercise 7 portfolio - after Ex. 8 modification");
 		myPortfolio.updateBalance(10000);
 		myPortfolio.buyStock("PIH",20);
 		myPortfolio.buyStock("AAL",30);

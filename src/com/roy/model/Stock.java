@@ -10,10 +10,10 @@ import java.util.Calendar;
  */
 public class Stock {
 	
-	private String symbol;
-	private float ask;
-	private float bid;
-	private Date date;
+	protected String symbol;
+	protected float ask;
+	protected float bid;
+	protected Date date;
 	
 	public Stock(){
 		String symbol="";
