@@ -44,10 +44,18 @@ public class PortfolioService {
 		stock3.setBid((float)15.5);
 		stock3.setDate(date);
 		
+		Stock stock4 = new Stock();
+		stock4.setSymbol("CAAS");
+		stock4.setAsk((float)20.0);
+		stock4.setBid((float)15.5);
+		stock4.setDate(date);
+		
+		
 		try{
 		myPortfolio.addStock(stock1);
 		myPortfolio.addStock(stock2);
 		myPortfolio.addStock(stock3);
+		myPortfolio.addStock(stock4);
 		}catch(StockAlreadyExistsException e){
 			System.out.println("error! portfolio full exception!");
 		}catch (PortfolioFullExceptions e){
