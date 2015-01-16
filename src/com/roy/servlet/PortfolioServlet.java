@@ -4,6 +4,10 @@ import java.io.IOException;
 
 import javax.servlet.http.*;
 
+import com.roy.exceptions.BalanceException;
+import com.roy.exceptions.StockNotExistException;
+import com.roy.exceptions.PortfolioFullExceptions;
+import com.roy.exceptions.StockAlreadyExistsException;
 import com.roy.model.Portfolio;
 import com.roy.model.Stock;
 import com.roy.service.PortfolioService;
@@ -16,12 +20,22 @@ public class PortfolioServlet extends HttpServlet {
 		//create instance
 		PortfolioService portfolioService = new PortfolioService(); 
 		//take the stocks
-		Portfolio portfolio = portfolioService.getPortfolio();
+		Portfolio portfolio;
+
+		try{
+		 portfolio = portfolioService.getPortfolio();
+		}
+		catch(Exception e)
+		{
+			resp.getWriter().println(e.getMessage());
+		}
+
 		//insert the stock
-		Stock[] stocks = portfolio.getStocksStatus();
+		
+
 
 		resp.setContentType("text/html");
-		resp.getWriter().println(portfolio.getHtmlString());
+		/*resp.getWriter().println(portfolio.getHtmlString());*/
 	}
 	
 

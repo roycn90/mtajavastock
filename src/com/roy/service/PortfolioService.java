@@ -1,14 +1,20 @@
 package com.roy.service;
 
 import java.util.Calendar;
+
 import java.util.Date;
 
+import com.roy.exceptions.BalanceException;
+import com.roy.exceptions.PortfolioFullExceptions;
+import com.roy.exceptions.StockAlreadyExistsException;
+import com.roy.exceptions.StockNotExistException;
 import com.roy.model.Portfolio;
 import com.roy.model.Stock;
+import com.roy.model.StockStatus;
 
 public class PortfolioService {
 	
-	public Portfolio getPortfolio () {
+	public Portfolio getPortfolio ()throws BalanceException, PortfolioFullExceptions, StockAlreadyExistsException,StockNotExistException {
 		
 		Date date=new Date();
 		
@@ -38,18 +44,50 @@ public class PortfolioService {
 		stock3.setBid((float)15.5);
 		stock3.setDate(date);
 		
-		
+		try{
 		myPortfolio.addStock(stock1);
 		myPortfolio.addStock(stock2);
 		myPortfolio.addStock(stock3);
+		}catch(StockAlreadyExistsException e){
+			System.out.println("error! portfolio full exception!");
+		}catch (PortfolioFullExceptions e){
+			System.out.println("error! stock alreay exist exception!");
+		
+		}
+		
 		
 		myPortfolio.setTitle("Exercise 7 portfolio - after Ex. 8 modification");
+		
 		myPortfolio.updateBalance(10000);
+		
+		try{
 		myPortfolio.buyStock("PIH",20);
 		myPortfolio.buyStock("AAL",30);
 		myPortfolio.buyStock("CAAS",40);
+		} catch (BalanceException e){
+			System.out.println("error! balance exception");
+		}catch (StockNotExistException e){
+				System.out.println("error! stock not exist exception!");
+			}
+			{
+		
+		try{
 		myPortfolio.sellStock("AAL", -1);
+		}catch (BalanceException e){
+			System.out.println("error! balance exception!");
+		}catch (StockNotExistException e){
+			System.out.println("error! stock not exist exception!");
+
+			}
+		}
+		try{
 		myPortfolio.removeStock("CAAS");
+		}catch(BalanceException e){
+			System.out.println("error! balance exception!");
+		}catch(StockNotExistException e){
+			System.out.println("error! stock not exist exception!");
+			
+		}
 		
 		return myPortfolio;
 		

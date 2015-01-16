@@ -2,6 +2,10 @@ package com.roy.model;
 
 import java.util.Date;
 
+import com.roy.exceptions.BalanceException;
+import com.roy.exceptions.PortfolioFullExceptions;
+import com.roy.exceptions.StockAlreadyExistsException;
+import com.roy.exceptions.StockNotExistException;
 import com.roy.model.StockStatus;
 
 public class Portfolio {
@@ -22,7 +26,7 @@ public class Portfolio {
 		this.setTitle("");
 		this.updateBalance(0);
 	 stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
-	  if(getLogicalSizeStocks(stocksStatus) > 0 && getLogicalSizeStocks(stocksStatus)<= MAX_PORTFOLIO_SIZE-1)//array is not full	
+	  /*if(getLogicalSizeStocks(stocksStatus) > 0 && getLogicalSizeStocks(stocksStatus)<= MAX_PORTFOLIO_SIZE-1)//array is not full	
 	  { 
 			int logicalSizeStocks = getLogicalSizeStocks(stocksStatus);
 			for (int i=0 ; i<logicalSizeStocks ; i++)
@@ -31,19 +35,26 @@ public class Portfolio {
 		
 			}
 				
-	  }
+	  }*/
 			
 	}
 	
-	public Portfolio (String title,StockStatus[] stocksStatus, float balance) {
+	public Portfolio (String title,StockStatus[] stocksStatus, float balance) throws PortfolioFullExceptions/*, StockAlreadyExistsException*/ {
 		setTitle(title); 
-		 
+		 this.stocksStatus=new StockStatus[MAX_PORTFOLIO_SIZE];
 		updateBalance(balance);
+		/* if(portfolioSize > 0 && portfolioSize<= MAX_PORTFOLIO_SIZE-1)//array is not full
+			{
+				for (int i = 0; i<portfolioSize; i++){
+					this.addStock(stocksStatus[i]) ;  
+					//stocksStatus[i] = new StockStatus(stockStatusP[i]) ;//fix it
+				}
+			}*/
 		
 	}
 	
 	//copy c'tor
-	public Portfolio (Portfolio portfolio){
+	public Portfolio (Portfolio portfolio)throws StockAlreadyExistsException,PortfolioFullExceptions {
 		this(portfolio.getTitle(), portfolio.getStocksStatus(), portfolio.getBalance() );
 		
 	}
@@ -65,7 +76,7 @@ public class Portfolio {
 		return i;//-1;//else i would be returning the spot AFTER last item position(on array)
 	}
 
-	private void copyStocksArray(Stock[] stocks, int size){// combine two next func to one in the copy c'tor
+	/*private void copyStocksArray(Stock[] stocks, int size){// combine two next func to one in the copy c'tor
 		
 		if(size > 0 && size<= MAX_PORTFOLIO_SIZE-1)//array is not full
 		{
@@ -77,7 +88,7 @@ public class Portfolio {
 			
 		}
 	
-	}
+	}*/
 public void copyStockStatusArray(StockStatus[] stockStatus,int size)
 {
 		
@@ -124,18 +135,21 @@ public void updateBalance(float amount){
 
 	
 
-	public void addStock(Stock stock){
-		if(portfolioSize >= MAX_PORTFOLIO_SIZE) {
-			System.out.println("stock array is full!");
-			return;
-		}
+	public void addStock(Stock stock)throws StockAlreadyExistsException, PortfolioFullExceptions{
+	
 		
 		for (int i=0; i<getPortfolioSize();i++) {
 			if(stock.getSymbol().equals(stocksStatus[i].getSymbol())) {
 				System.out.println("you already have such stock! cant add new one ");
-				return;
-			}
+				throw new StockAlreadyExistsException(stock.getSymbol());				
+			}	
 		}
+			if(portfolioSize >= MAX_PORTFOLIO_SIZE) {
+			System.out.println("stock array is full!");
+			
+			throw new PortfolioFullExceptions(MAX_PORTFOLIO_SIZE);
+		}
+		
 		
 		
 		this.stocksStatus[portfolioSize]=new StockStatus(stock.getBid(), stock.getAsk(), stock.getDate(),stock.getSymbol() ,ALGO_RECOMMENDATION.DO_NOTHING,0);
@@ -151,36 +165,44 @@ public void updateBalance(float amount){
 
 	
 	
-	public Boolean removeStock(String symbol){
+	public void removeStock(String symbol) throws StockNotExistException, BalanceException{
 		
 		
-		boolean removeFlag=false;
+		/*boolean removeFlag=false;*/
 		
 		for (int i=0; i < portfolioSize ; i++){
 			
-			if ((this.stocksStatus[i].getSymbol()).equals(symbol)) //validation, do we have such stock in portfolio?
+			if ((this.stocksStatus[i].getSymbol()).equals(symbol)) //validfation, do we have such stock in portfolio?
 			{	
-				removeFlag=sellStock(this.stocksStatus[i].getSymbol(), -1);
+				/*removeFlag=sellStock(this.stocksStatus[i].getSymbol(), -1);*/
 				
-				if(removeFlag){
+				sellStock(this.stocksStatus[i].getSymbol(), -1);
+				
+				/*if(removeFlag){*/
 				this.stocksStatus[i]=this.stocksStatus[portfolioSize-1];
 				this.stocksStatus[i]=null;
 				this.portfolioSize--;
-				}
+				/*}*/
 							
-				return removeFlag;
+				
+				
+				
 				
 			}
-
+			throw new StockNotExistException(symbol);
 		}
-		return removeFlag;
+		
 	}
 	
 
 	
-	public boolean sellStock(String symbol, int sellQuant){
+	public void sellStock(String symbol, int sellQuant) throws BalanceException, StockNotExistException{
 		
 		boolean sellFlag = false;
+		
+		if (sellQuant<-1){
+			throw new BalanceException();
+		}
 		
 		for(int i=0 ; i<portfolioSize ; i++){
 			
@@ -199,10 +221,31 @@ public void updateBalance(float amount){
 			}
 		}
 		
-		if(!sellFlag)
-			System.out.println("error! not valid");
+		int i=0;
 		
-		return sellFlag;
+		for(i=0; i<portfolioSize; i++){
+			if (this.stocksStatus[i].getSymbol().equals(symbol)){
+				
+			}
+			if(i==portfolioSize){
+				throw new StockNotExistException(symbol);
+			}
+		}
+		
+		for(i=0; i<portfolioSize; i++){
+			if (sellQuant<=this.stocksStatus[i].getStockQuantity()){
+				
+			}
+			if(i==portfolioSize){
+				throw new BalanceException();
+			}
+		}
+		
+		
+		
+		/*if(!sellFlag)
+			System.out.println("error! not valid");*/
+		
 	}
 		
 		
@@ -210,11 +253,11 @@ public void updateBalance(float amount){
 	
 		
 		
-		 public boolean buyStock (String symbol, int buyQuant){
+		 public void buyStock (String symbol, int buyQuant)throws BalanceException, StockNotExistException,PortfolioFullExceptions{
 			 
 			 if(buyQuant==0 || buyQuant<-1){
-				 System.out.println("error, invalid quantity");
-				 return false;
+				 /*System.out.println("error, invalid quantity");*/
+				 throw new BalanceException();
 			 }
 			 
 			 if(buyQuant>0){
@@ -224,7 +267,6 @@ public void updateBalance(float amount){
 				
 				this.updateBalance(-(this.stocksStatus[i].getAsk()*buyQuant));
 				stocksStatus[i].setStockQuantity(buyQuant+this.stocksStatus[i].getStockQuantity());
-				return true;
 				
 			}
 		}
@@ -239,7 +281,6 @@ public void updateBalance(float amount){
 				float left = balance%this.stocksStatus[i].getAsk();
 				this.updateBalance(left);
 				this.stocksStatus[i].setStockQuantity(this.stocksStatus[i].getStockQuantity()+tempQuant);	
-				return true;
 				
 					
 				}
@@ -247,13 +288,31 @@ public void updateBalance(float amount){
 			
 		}
 		
+		int i=0;
+		 for( i=0 ; i<portfolioSize ; i++){
+			 if ((this.stocksStatus[i].getSymbol()).equals(symbol)){
+				 
+			 }
+			 if (i==portfolioSize){
+				 throw new StockNotExistException(this.stocksStatus[i].getSymbol());
+			 }
+		 }
+		 
+			i=0;
+			 for( i=0 ; i<portfolioSize ; i++){
+				 if(this.stocksStatus[i].getAsk()*buyQuant<=this.getBalance()){
+				 }
+				 if(i==portfolioSize){
+					 throw new BalanceException() ;
+				 	}
+				 }
+			 }
 		
-			System.out.println("throwed");
-			return false;
+			
 		
 		
 	
-		 }
+		 
 	
 	
 	public float getStocksValue(){
@@ -302,15 +361,22 @@ public void updateBalance(float amount){
 	
 	
 	
-	public void setStocks(Stock[] stocks,int size) {
+	public void setStocks(Stock[] stocks,int size) throws PortfolioFullExceptions,StockAlreadyExistsException  {
 		for(int i=0; i<size;  i++)
 		{
+			try{
 			this.addStock(stocks[i]);
+			}catch(PortfolioFullExceptions e){
+				System.out.println("portfolio is full!");
+			}catch(StockAlreadyExistsException e){
+				System.out.println("you alreasy have such stock!");
+			}
+			}
 			
 		}
 				
 	}
-}
+
 
 	
 	
