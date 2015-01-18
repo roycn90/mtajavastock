@@ -369,7 +369,7 @@ public void updateBalance(float amount){
 			}catch(PortfolioFullExceptions e){
 				System.out.println("portfolio is full!");
 			}catch(StockAlreadyExistsException e){
-				System.out.println("you alreasy have such stock!");
+				System.out.println("you already have such stock!");
 			}
 			}
 			

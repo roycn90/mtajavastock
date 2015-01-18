@@ -51,51 +51,20 @@ public class PortfolioService {
 		stock4.setDate(date);
 		
 		
-		try{
 		myPortfolio.addStock(stock1);
 		myPortfolio.addStock(stock2);
 		myPortfolio.addStock(stock3);
 		myPortfolio.addStock(stock4);
-		}catch(StockAlreadyExistsException e){
-			System.out.println("error! portfolio full exception!");
-		}catch (PortfolioFullExceptions e){
-			System.out.println("error! stock alreay exist exception!");
-		
-		}
 		
 		
 		myPortfolio.setTitle("Exercise 7 portfolio - after Ex. 8 modification");
 		
 		myPortfolio.updateBalance(10000);
 		
-		try{
 		myPortfolio.buyStock("PIH",20);
 		myPortfolio.buyStock("AAL",30);
 		myPortfolio.buyStock("CAAS",40);
-		} catch (BalanceException e){
-			System.out.println("error! balance exception");
-		}catch (StockNotExistException e){
-				System.out.println("error! stock not exist exception!");
-			}
-			{
-		
-		try{
-		myPortfolio.sellStock("AAL", -1);
-		}catch (BalanceException e){
-			System.out.println("error! balance exception!");
-		}catch (StockNotExistException e){
-			System.out.println("error! stock not exist exception!");
-
-			}
-		}
-		try{
 		myPortfolio.removeStock("CAAS");
-		}catch(BalanceException e){
-			System.out.println("error! balance exception!");
-		}catch(StockNotExistException e){
-			System.out.println("error! stock not exist exception!");
-			
-		}
 		
 		return myPortfolio;
 		
