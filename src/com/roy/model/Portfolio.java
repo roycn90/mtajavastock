@@ -143,9 +143,9 @@ public void updateBalance(float amount){
 		int i = 0 ; 
 		for (;!this.stocksStatus[i].getSymbol().equalsIgnoreCase(OtherSymbol) && i<this.portfolioSize && i<MAX_PORTFOLIO_SIZE ; i++ ){	}
 		if (i>=this.portfolioSize && i>=MAX_PORTFOLIO_SIZE){
-			i=-1;//Not fount
+			i=-1;//stock Not found
 		}
-		return i;//the position		
+		return i;//index		
 	}
 
 	public void addStock(Stock stock)throws StockAlreadyExistsException, PortfolioFullException{
