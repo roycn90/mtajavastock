@@ -2,17 +2,16 @@ package com.roy.model;
 
 import java.util.Date;
 
-import com.roy.exceptions.BalanceException;
-import com.roy.exceptions.PortfolioFullExceptions;
-import com.roy.exceptions.StockAlreadyExistsException;
-import com.roy.exceptions.StockNotExistException;
-import com.roy.model.StockStatus;
+import com.roy.exceptions.*;
+import java.util.List;
+
+
 
 public class Portfolio {
 	
 	private String title;
-	private final static int MAX_PORTFOLIO_SIZE=5;
-	static enum ALGO_RECOMMENDATION	{DO_NOTHING, BUY, SELL};
+	public final static int MAX_PORTFOLIO_SIZE=5;
+	public static enum ALGO_RECOMMENDATION	{DO_NOTHING, BUY, SELL};
 	private StockStatus[] stocksStatus; 
 	private int portfolioSize=0;
 	private float balance;
@@ -39,7 +38,7 @@ public class Portfolio {
 			
 	}
 	
-	public Portfolio (String title,StockStatus[] stocksStatus, float balance) throws PortfolioFullExceptions/*, StockAlreadyExistsException*/ {
+	public Portfolio (String title,StockStatus[] stocksStatus, float balance) throws PortfolioFullException/*, StockAlreadyExistsException*/ {
 		setTitle(title); 
 		 this.stocksStatus=new StockStatus[MAX_PORTFOLIO_SIZE];
 		updateBalance(balance);
@@ -53,10 +52,16 @@ public class Portfolio {
 		
 	}
 	
-	//copy c'tor
-	public Portfolio (Portfolio portfolio)throws StockAlreadyExistsException,PortfolioFullExceptions {
-		this(portfolio.getTitle(), portfolio.getStocksStatus(), portfolio.getBalance() );
-		
+	public Portfolio (Portfolio otherPortfolio) throws StockAlreadyExistsException, PortfolioFullException{
+		this (otherPortfolio.getTitle(),otherPortfolio.getStocksStatus(),otherPortfolio.balance);
+	}
+
+	public Portfolio(List<StockStatus> stockStatuses) throws StockAlreadyExistsException, PortfolioFullException {
+        this();
+        for (int i = 0; i < stockStatuses.size(); i++) {
+            this.stocksStatus[i] = stockStatuses.get(i);
+            this.portfolioSize++;
+        }
 	}
 	
 	
@@ -133,9 +138,17 @@ public void updateBalance(float amount){
 	}
 	
 
-	
+	public int findStock (String OtherSymbol)
+	{
+		int i = 0 ; 
+		for (;!this.stocksStatus[i].getSymbol().equalsIgnoreCase(OtherSymbol) && i<this.portfolioSize && i<MAX_PORTFOLIO_SIZE ; i++ ){	}
+		if (i>=this.portfolioSize && i>=MAX_PORTFOLIO_SIZE){
+			i=-1;//Not fount
+		}
+		return i;//the position		
+	}
 
-	public void addStock(Stock stock)throws StockAlreadyExistsException, PortfolioFullExceptions{
+	public void addStock(Stock stock)throws StockAlreadyExistsException, PortfolioFullException{
 	
 		
 		for (int i=0; i<getPortfolioSize();i++) {
@@ -147,7 +160,7 @@ public void updateBalance(float amount){
 			if(portfolioSize >= MAX_PORTFOLIO_SIZE) {
 			System.out.println("stock array is full!");
 			
-			throw new PortfolioFullExceptions(MAX_PORTFOLIO_SIZE);
+			throw new PortfolioFullException();
 		}
 		
 		
@@ -165,7 +178,7 @@ public void updateBalance(float amount){
 
 	
 	
-	public void removeStock(String symbol) throws StockNotExistException, BalanceException{
+	public void removeStock(String symbol) throws StockNotExistsException, BalanceException{
 		
 		
 		/*boolean removeFlag=false;*/
@@ -189,14 +202,14 @@ public void updateBalance(float amount){
 				
 				
 			}
-			throw new StockNotExistException(symbol);
+			throw new StockNotExistsException(symbol);
 		}
 		
 	}
 	
 
 	
-	public void sellStock(String symbol, int sellQuant) throws BalanceException, StockNotExistException{
+	public void sellStock(String symbol, int sellQuant) throws BalanceException, StockNotExistsException{
 		
 		boolean sellFlag = false;
 		
@@ -228,7 +241,7 @@ public void updateBalance(float amount){
 				
 			}
 			if(i==portfolioSize){
-				throw new StockNotExistException(symbol);
+				throw new StockNotExistsException(symbol);
 			}
 		}
 		
@@ -253,7 +266,7 @@ public void updateBalance(float amount){
 	
 		
 		
-		 public void buyStock (String symbol, int buyQuant)throws BalanceException, StockNotExistException,PortfolioFullExceptions{
+		 public void buyStock (String symbol, int buyQuant)throws BalanceException, StockNotExistsException,PortfolioFullException{
 			 
 			 if(buyQuant==0 || buyQuant<-1){
 				 /*System.out.println("error, invalid quantity");*/
@@ -294,7 +307,7 @@ public void updateBalance(float amount){
 				 
 			 }
 			 if (i==portfolioSize){
-				 throw new StockNotExistException(this.stocksStatus[i].getSymbol());
+				 throw new StockNotExistsException(this.stocksStatus[i].getSymbol());
 			 }
 		 }
 		 
@@ -361,12 +374,12 @@ public void updateBalance(float amount){
 	
 	
 	
-	public void setStocks(Stock[] stocks,int size) throws PortfolioFullExceptions,StockAlreadyExistsException  {
+	public void setStocks(Stock[] stocks,int size) throws PortfolioFullException,StockAlreadyExistsException  {
 		for(int i=0; i<size;  i++)
 		{
 			try{
 			this.addStock(stocks[i]);
-			}catch(PortfolioFullExceptions e){
+			}catch(PortfolioFullException e){
 				System.out.println("portfolio is full!");
 			}catch(StockAlreadyExistsException e){
 				System.out.println("you already have such stock!");

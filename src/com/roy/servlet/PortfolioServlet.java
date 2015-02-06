@@ -1,42 +1,61 @@
 package com.roy.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.http.*;
-
-import com.roy.exceptions.BalanceException;
-import com.roy.exceptions.StockNotExistException;
-import com.roy.exceptions.PortfolioFullExceptions;
+import com.roy.dto.PortfolioDto;
+import com.roy.dto.PortfolioTotalStatus;
+import com.roy.exceptions.PortfolioFullException;
 import com.roy.exceptions.StockAlreadyExistsException;
-import com.roy.model.Portfolio;
-import com.roy.model.Stock;
-import com.roy.service.PortfolioService;
+import com.roy.model.StockStatus;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-@SuppressWarnings("serial")
-public class PortfolioServlet extends HttpServlet {
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		//create instance
-		PortfolioService portfolioService = new PortfolioService(); 
-		//take the stocks
-		Portfolio portfolio;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-		try{
-		 portfolio = portfolioService.getPortfolio();
-		}
-		catch(Exception e)
-		{
-			resp.getWriter().println(e.getMessage());
-		}
+public class PortfolioServlet extends AbstractAlgoServlet {
 
-		//insert the stock
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-
-
-		resp.setContentType("text/html");
-		/*resp.getWriter().println(portfolio.getHtmlString());*/
+		resp.setContentType("application/json");
+		
+		PortfolioTotalStatus[] totalStatus = null;
+		try {
+			totalStatus = portfolioService.getPortfolioTotalStatus();
+		} catch (StockAlreadyExistsException e) {
+		resp.getWriter().print(e.getMessage());
+		} catch (PortfolioFullException e) {
+			resp.getWriter().print(e.getMessage());
+		}
+		StockStatus[] stockStatusArray = null;
+		try {
+			stockStatusArray = portfolioService.getPortfolio().getStocksStatus();
+		} catch (StockAlreadyExistsException e) {
+			resp.getWriter().print(e.getMessage());;
+		} catch (PortfolioFullException e) {
+			resp.getWriter().print(e.getMessage());
+		}
+		List<StockStatus> stockStatusList = new ArrayList<>();
+		for (StockStatus ss : stockStatusArray) {
+			if(ss != null)
+				stockStatusList.add(ss);
+		}
+		
+		PortfolioDto pDto = new PortfolioDto();
+		try {
+			pDto.setTitle(portfolioService.getPortfolio().getTitle());
+		} catch (StockAlreadyExistsException e) {
+			resp.getWriter().print(e.getMessage());
+			e.printStackTrace();
+		} catch (PortfolioFullException e) {
+			resp.getWriter().print(e.getMessage());
+		}
+		pDto.setTotalStatus(totalStatus);
+		pDto.setStockTable(stockStatusList);
+		resp.getWriter().print(withNullObjects().toJson(pDto));
 	}
-	
-
 }
