@@ -40,6 +40,14 @@ public class StockStatus extends Stock{
 					stockStatus.getRecommendation(), stockStatus.getStockQuantity() );
 		}
 		
+		public StockStatus(Stock otherStock) {
+			super(otherStock);
+			setRecommendation(ALGO_RECOMMENDATION.DO_NOTHING);
+			setStockQuantity(0);
+			setAsk(otherStock.getAsk());
+			setBid(otherStock.getBid());
+		}
+		
 	
 		 
 		

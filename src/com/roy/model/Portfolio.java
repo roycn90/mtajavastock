@@ -346,10 +346,15 @@ public void updateBalance(float amount){
 	}
 	
 	
-	public Stock[] getStocks(Portfolio portfolio){
+	public StockStatus[] getStocks(Portfolio portfolio){
 		
 		return  stocksStatus;
 	}
+	
+	/*public StockStatus[] getStockStatus(){
+
+		return this.stocksStatus;
+	}*/
 	
 	public String getHtmlString(){
 	
